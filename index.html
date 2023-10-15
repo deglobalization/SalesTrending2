@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Product Admin - Dashboard HTML Template</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
+    <!-- https://fonts.google.com/specimen/Roboto -->
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+    <!-- https://fontawesome.com/ -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- https://getbootstrap.com/ -->
+    <link rel="stylesheet" href="css/templatemo-style.css">
+     <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!--
+	Product Admin CSS Template
+	https://templatemo.com/tm-524-product-admin
+	-->
+    
+    
+</head>
+
+<body id="reportsPage">
+    <div class="" id="home">
+        <nav class="navbar navbar-expand-xl">
+            <div class="container h-100">
+                <a class="navbar-brand" href="index.html">
+                    <h1 class="tm-site-title mb-0">Hanmi Pharmaceuticals</h1>
+                </a>
+                <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars tm-nav-icon"></i>
+                </button>
+
+                <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto h-100">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="far fa-file-alt"></i>
+                                <span>
+                                    Reports <i class="fas fa-angle-down"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Daily Report</a>
+                                <a class="dropdown-item" href="#">Weekly Report</a>
+                                <a class="dropdown-item" href="#">Yearly Report</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="products.html">
+                                <i class="fas fa-shopping-cart"></i>
+                                Products
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="accounts.html">
+                                <i class="far fa-user"></i>
+                                Accounts
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-cog"></i>
+                                <span>
+                                    Settings <i class="fas fa-angle-down"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Profile</a>
+                                <a class="dropdown-item" href="#">Billing</a>
+                                <a class="dropdown-item" href="#">Customize</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link d-block" href="login.html">
+                                Admin, <b>Logout</b>
+                            </a>
+                        </li>
+                    </ul>
+                </div> -->
+            </div>
+
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row tm-content-row">
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block">
+                        <h2 class="tm-block-title">팀 매출 트렌드</h2>
+                        <button id="prevItem" class="arrow-button">←</button>
+                        <button id="nextItem" class="arrow-button">→</button>
+                        <canvas id="lineChart"></canvas>
+ 
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block">
+                        <h2 class="tm-block-title">담당자 품목 성과</h2>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    let currentIndex = 0; 
+    let lineData = null;
+    let barData = null;
+    let pieChartData = null;
+
+
+    async function fetchData(url) {
+        try {
+            let response = await fetch(url);
+            let data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error:', error);
+            return null;
+        }
+    }
+
+    async function updateCharts(repName) {
+        lineData = await fetchData('http://34.29.205.253:5000/');
+        barData = await fetchData('http://34.29.205.253:5000/get_data');
+        pieChartData = await fetchData('http://34.29.205.253:5000/piechart');  // example endpoint
+        
+
+        
+
+        if (Array.isArray(lineData) && lineData.length > 0 && barData) {
+            drawChartWithIndex(lineData, currentIndex, barData, pieChartData);
+        }
+    }
+
+    document.getElementById('prevItem').addEventListener('click', function() {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : lineData.length - 1;
+        drawChartWithIndex(lineData, currentIndex, barData, pieChartData);
+    });
+
+    document.getElementById('nextItem').addEventListener('click', function() {
+        currentIndex = (currentIndex < lineData.length - 1) ? currentIndex + 1 : 0;
+        drawChartWithIndex(lineData, currentIndex, barData, pieChartData);
+    });
+
+    
+
+
+    function handleRepButtonClick(event) {
+        const repName = event.target.getAttribute('data-rep');
+        //updateCharts();
+        fetchNotificationData(`http://34.29.205.253:5000/notification/${encodeURIComponent(repName)}/${encodeURIComponent(notiData)}`);
+    }
+
+    document.querySelectorAll('#salesRepButtons button').forEach(button => {
+        button.addEventListener('click', handleRepButtonClick);
+    });
+
+    
+    
+
+    function drawChartWithIndex(lineData, index, barData, pieChartData) {
+    const item = lineData[index];
+    const labels = Object.keys(item).filter(key => key !== '품목명' && key !== '기준대비성장금액' && key !== '전월대비성장금액');
+    const values = labels.map(label => parseFloat(item[label].replace(/,/g, '')));
+    
+    const lineChartData = {
+        labels: labels,
+        datasets: [{
+            label: item['품목명'],
+            data: values,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+            fill: false
+        }]
+    };
+
+    drawLineChart(lineChartData);
+
+    only = '김병민 ' + item['품목명'].replace(/합계|[a-zA-Z]/g, "");
+    onlyPie = item['품목명'].replace(/합계|[a-zA-Z]/g, "");
+    notiData = onlyPie.substring(0, onlyPie.length - 1)
+    notiDatas = item['품목명']
+    const filteredBarData = barData.filter(d => d['품목군명'].includes(only));
+    
+    const barLabels = Object.keys(filteredBarData[0]).filter(key => key.match(/^\d+$/));
+    const barDatasets = filteredBarData.map(item => {
+        return {
+            label: item['품목군명'],
+            data: barLabels.map(label => parseFloat(item[label].replace(/,/g, '')) || 0),
+        };
+    });
+
+    drawBarChart(barLabels, barDatasets);
+
+    // Update Pie Chart here based on pieChartData and index
+    if (pieChartData) {
+        // Your Pie Chart drawing logic here
+        let targetItems = pieChartData.filter(item => item['품목군명'].startsWith(onlyPie.substring(0, onlyPie.length - 1)) && item['담당자명'] === '김병민');
+        
+        console.log(notiData);
+        console.log('아모잘탄큐'.length);
+        console.log(`[${onlyPie}]`);
+        console.log(onlyPie === '아모잘탄');
+        console.log(onlyPie)
+        let itemSalesTotals = {};
+        targetItems.forEach(item => {
+            itemSalesTotals[item['품목명']] = (itemSalesTotals[item['품목명']] || 0) + parseFloat(item['RX 총Net매출(VAT제외)']);
+        });
+
+        let totalSales = Object.values(itemSalesTotals).reduce((total, sales) => total + sales, 0);
+
+        let pieChartDataProcessed = Object.entries(itemSalesTotals).map(([itemName, sales]) => ({
+            itemName: itemName,
+            proportion: sales / totalSales
+        }));
+
+        drawPieChart(pieChartDataProcessed);
+        notiUrl = 'http://34.29.205.253:5000/notification/김병민/' + encodeURIComponent(notiData)
+        // Notification 데이터 가져오기
+        fetchNotificationData(notiUrl);
+    }
+
+    
+    
+
+
+    }
+    
+
+    async function fetchNotificationData(url) {
+        try {
+            let response = await fetch(url);
+            let data = await response.json();
+            updateNotifications(data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function updateNotifications(data) {
+    var notificationContainer = $('.tm-notification-items');
+    notificationContainer.empty();
+
+    if (data && data.length > 0) {
+        data.forEach(function(notification) {
+            var notificationItem = `
+                <div class="media tm-notification-item">
+                    <div class="tm-gray-circle">
+                        <img class="rounded-circle">
+                    </div>
+                    <div class="media-body">
+                        <p class="mb-2">
+                            <b>${notification['담당자명']}</b>프로의 <b>${notification['품목명']}</b> 최근 3개월 기준대비 <b>${numberToKorean(notification['기준대비성장금액'])}</b>원 만큼 변동되었습니다.
+                        </p>
+                    </div>
+                </div>
+            `;
+            notificationContainer.append(notificationItem);
+        });
+    } else {
+        var noNotificationItem = `
+            <div class="media tm-notification-item">
+                <div class="tm-gray-circle">
+                    <img class="rounded-circle">
+                </div>
+                <div class="media-body">
+                    <p class="mb-2">
+                        특이사항 없음
+                    </p>
+                </div>
+            </div>
+        `;
+        notificationContainer.append(noNotificationItem);
+    }
+}
+
+    // Charts 업데이트
+    updateCharts();
+
+    
+});
+
+
+
+
+                        </script>
+                </div>
+ 
+ 
+
+                </script>
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block tm-block-taller">
+                        <h2 class="tm-block-title">담당자 품목 비율</h2>
+                        <div id="pieChartContainer">
+                            <canvas id="pieChart" class="chartjs-render-monitor" width="200" height="200"></canvas>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
+                        <h2 class="tm-block-title">거래처 특이사항</h2>
+                        <div id="salesRepButtons">
+                            <button class="rep-button" data-rep="김병민">김병민</button>
+                            <button class="rep-button" data-rep="김서연">김서연</button>
+                            <button class="rep-button" data-rep="김관태">김관태</button>
+                            <!-- Add more buttons as needed -->
+                            <h2></h2>
+                        </div>
+                        <div class="tm-notification-items", id="notification-container">
+    
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col-12 tm-block-col">
+    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+        <h2 class="tm-block-title">RawData</h2>
+        <table class="table" id="ordersTable">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
+            const table = document.getElementById('ordersTable');
+
+            // Fetch data from server
+            fetch('http://34.29.205.253:5000/')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok' + response.statusText);
+                    }
+                    return response.json(); // Parse JSON data
+                })
+                .then(data => {
+                    // Check if data is valid
+                    if (Array.isArray(data) && data.length > 0) {
+                        // Create table header
+                        const thead = document.createElement('thead');
+                        const headerRow = document.createElement('tr');
+                        Object.keys(data[0]).forEach(key => {
+                            const th = document.createElement('th');
+                            th.textContent = key;
+                            headerRow.appendChild(th);
+                        });
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+
+                        // Create table body
+                        const tbody = document.createElement('tbody');
+                        data.forEach(item => {
+                            const row = document.createElement('tr');
+                            Object.values(item).forEach(value => {
+                                const td = document.createElement('td');
+                                td.textContent = value;
+                                row.appendChild(td);
+                            });
+                            tbody.appendChild(row);
+                        });
+                        table.appendChild(tbody);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Fetch error: ', error);
+                });
+        });
+
+        function adjustColumnWidths(tableId) {
+  var table = document.getElementById(tableId);
+  var rows = table.getElementsByTagName('tr');
+  var colWidths = [];
+
+  // 각 열에 대해 가장 긴 셀의 너비를 찾는다.
+  for (var i = 0; i < rows.length; i++) {
+      var cells = rows[i].getElementsByTagName('td');
+      for (var j = 0; j < cells.length; j++) {
+          var txtLength = cells[j].innerText.length;
+          colWidths[j] = colWidths[j] > txtLength ? colWidths[j] : txtLength;
+      }
+  }
+
+  // 각 열의 너비를 설정한다.
+  for (var i = 0; i < rows.length; i++) {
+      var cells = rows[i].getElementsByTagName('td');
+      for (var j = 0; j < cells.length; j++) {
+          cells[j].style.width = (colWidths[j] * 8) + 'px'; // 가정: 한 글자당 8px
+      }
+  }
+}
+
+// 로드 후 함수 실행
+window.onload = function() {
+  adjustColumnWidths('ordersTable');
+}
+
+        
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="tm-footer row tm-mt-small">
+            <div class="col-12 font-weight-light">
+                <p class="text-center text-white mb-0 px-4 small">
+                    Copyright &copy; <b>2023</b> All rights reserved. 
+                    
+                    
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!-- https://jquery.com/download/ -->
+    <script src="js/moment.min.js"></script>
+    <!-- https://momentjs.com/ -->
+    <script src="js/Chart.min.js"></script>
+    <!-- http://www.chartjs.org/docs/latest/ -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- https://getbootstrap.com/ -->
+    <script src="js/tooplate-scripts.js"></script>
+    <script>
+        Chart.defaults.global.defaultFontColor = 'white';
+        let ctxLine,
+            ctxBar,
+            ctxPie,
+            optionsLine,
+            optionsBar,
+            optionsPie,
+            configLine,
+            configBar,
+            configPie,
+            lineChart;
+            barChart, 
+            pieChart;
+        // DOM is ready
+        $(function () {
+            //drawLineChart(); // Line Chart
+            //drawBarChart(); // Bar Chart
+            //drawPieChart(); // Pie Chart
+
+            $(window).resize(function () {
+                //updateLineChart();
+                //updateBarChart();                
+            });
+        })
+    </script>
+
+</body>
+
+</html>

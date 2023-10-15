@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Product Admin - Dashboard HTML Template</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
+    <!-- https://fonts.google.com/specimen/Roboto -->
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+    <!-- https://fontawesome.com/ -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- https://getbootstrap.com/ -->
+    <link rel="stylesheet" href="css/templatemo-style.css">
+     <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <style>
+        /* 표의 스타일을 설정 */
+        #data-table {
+            width: 100%; /* 표의 너비를 최대로 설정 */
+            text-align: left; /* 셀 내용을 왼쪽으로 정렬 */
+        }
+    
+        /* 표 행의 스타일을 설정 */
+        #data-table tr {
+            height: 50px; /* 표 행의 높이를 설정 */
+        }
+    
+        /* 표 헤더 셀의 스타일을 설정 */
+        #data-table th {
+            background-color: #2687ad; /* 헤더의 배경색을 설정 */
+            padding: 10px; /* 헤더 셀의 패딩을 설정 */
+        }
+    
+        /* 표 바디 셀의 스타일을 설정 */
+        #data-table td {
+            background-color: #2687ad; 
+            padding: 8px; /* 바디 셀의 패딩을 설정 */
+        }
+    </style>
+    <!--
+	Product Admin CSS Template
+	https://templatemo.com/tm-524-product-admin
+	-->
+    
+    
+</head>
+
+<body id="reportsPage">
+    <div class="" id="home">
+        <nav class="navbar navbar-expand-xl">
+            <div class="container h-100">
+                <a class="navbar-brand" href="index.html">
+                    <h1 class="tm-site-title mb-0">Hanmi Pharmaceuticals</h1>
+                </a>
+                <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars tm-nav-icon"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto h-100">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="far fa-file-alt"></i>
+                                <span>
+                                    Reports <i class="fas fa-angle-down"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Daily Report</a>
+                                <a class="dropdown-item" href="#">Weekly Report</a>
+                                <a class="dropdown-item" href="#">Yearly Report</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="products.html">
+                                <i class="fas fa-shopping-cart"></i>
+                                Products
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="accounts.html">
+                                <i class="far fa-user"></i>
+                                Accounts
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-cog"></i>
+                                <span>
+                                    Settings <i class="fas fa-angle-down"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Profile</a>
+                                <a class="dropdown-item" href="#">Billing</a>
+                                <a class="dropdown-item" href="#">Customize</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link d-block" href="login.html">
+                                Admin, <b>Logout</b>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p class="text-white mt-5 mb-5">Welcome back, <b>Admin</b></p>
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row tm-content-row">
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block">
+                        <h2 class="tm-block-title">Key Products</h2>
+                        <button id="prevItem" class="arrow-button">←</button>
+                        <button id="nextItem" class="arrow-button">→</button>
+                        <canvas id="lineChart"></canvas>
+ 
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block">
+                        <h2 class="tm-block-title">Performance</h2>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            let currentIndex = 0; 
+                        
+                            async function fetchData(url) {
+                                try {
+                                    let response = await fetch(url);
+                                    let data = await response.json();
+                                    return data;
+                                } catch (error) {
+                                    console.error('Error:', error);
+                                    return null;
+                                }
+                            }
+                        
+                            async function updateCharts() {
+                                let lineData = await fetchData('http://localhost:5000/');
+                                let barData = await fetchData('http://localhost:5000/get_data');
+                        
+                                if (Array.isArray(lineData) && lineData.length > 0 && barData) {
+                                    drawChartWithIndex(lineData, currentIndex, barData);
+                                }
+                        
+                                document.getElementById('prevItem').addEventListener('click', function() {
+                                    currentIndex = (currentIndex > 0) ? currentIndex - 1 : lineData.length - 1;
+                                    drawChartWithIndex(lineData, currentIndex, barData);
+                                });
+                        
+                                document.getElementById('nextItem').addEventListener('click', function() {
+                                    currentIndex = (currentIndex < lineData.length - 1) ? currentIndex + 1 : 0;
+                                    drawChartWithIndex(lineData, currentIndex, barData);
+                                });
+                            }
+                        
+                            function drawChartWithIndex(lineData, index, barData) {
+                                const item = lineData[index];
+                                const labels = Object.keys(item).filter(key => key !== '품목명' && key !== '기준대비성장금액' && key !== '전월대비성장금액');
+                                const values = labels.map(label => parseFloat(item[label].replace(/,/g, '')));
+                                
+                                const lineChartData = {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: item['품목명'],
+                                        data: values,
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 2,
+                                        fill: false
+                                    }]
+                                };
+                        
+                                drawLineChart(lineChartData);
+                        
+                                
+                                only = '김병민 ' + item['품목명'].replace(/[a-zA-Z]/g, "");
+                                console.log(only)
+                                const filteredBarData = barData.filter(d => d['품목군명'].includes(only));
+                                
+                                
+                                
+                                // Extract monthly data and label names
+                                const labelss = Object.keys(filteredBarData[0]).filter(key => key.match(/^\d+$/));
+                                
+                                console.log(labelss)
+                                const datasets = filteredBarData.map(item => {
+                                    return {
+                                        label: item['품목군명'],
+                                        data: labelss.map(label => parseFloat(item[label].replace(/,/g, '')) || 0),  // Ensure data is numeric
+                                        // Add other Chart.js dataset properties here (e.g., borderColor, backgroundColor, etc.)
+                                    };
+                                });
+                                console.log(labelss)
+                        
+                                // Draw a bar chart using this data
+                                drawBarChart(labelss, datasets);
+                        
+                                function drawBarChart(labels, datasets) {
+                          // Ensure the element exists in the DOM
+                          if ($("#barChart").length) {
+                              const ctxBar = document.getElementById("barChart").getContext("2d");
+                        
+                              const optionsBar = {
+                                  responsive: true,
+                                  
+                                  scales: {
+                                      yAxes: [
+                                          {
+                                              barPercentage: 0.2,
+                                              ticks: {
+                                                callback: function(value, index, values) {
+                                                    return numberToKorean(value);
+                                                }
+                                            },
+                                              scaleLabel: {
+                                                  display: false,
+                                                  labelString: "Perfddormance"
+                                              }
+                                          }
+                                      ]
+                                  }
+                              };
+                        
+                              new Chart(ctxBar, {
+                                  type: 'bar',
+                                  data: {
+                                      labels: labels,
+                                      datasets: datasets
+                                  },
+                                  options: optionsBar,
+                                  
+                              });
+                          }
+                        }
+                            }
+                            
+                        
+                            updateCharts();
+                            
+                        });
+                        
+                        
+                                                </script>
+                </div>
+ 
+ 
+
+                </script>
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block tm-block-taller">
+                        <h2 class="tm-block-title">Storage Information</h2>
+                        <div id="pieChartContainer">
+                            <canvas id="pieChart" class="chartjs-render-monitor" width="200" height="200"></canvas>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
+                        <h2 class="tm-block-title">Notification List</h2>
+                        <div class="tm-notification-items">
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-01.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Jessica</b> and <b>6 others</b> sent you new <a href="#"
+                                            class="tm-notification-link">product updates</a>. Check new orders.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-02.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Oliver Too</b> and <b>6 others</b> sent you existing <a href="#"
+                                            class="tm-notification-link">product updates</a>. Read more reports.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-03.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Victoria</b> and <b>6 others</b> sent you <a href="#"
+                                            class="tm-notification-link">order updates</a>. Read order information.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-01.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Laura Cute</b> and <b>6 others</b> sent you <a href="#"
+                                            class="tm-notification-link">product records</a>.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-02.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Samantha</b> and <b>6 others</b> sent you <a href="#"
+                                            class="tm-notification-link">order stuffs</a>.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-03.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Sophie</b> and <b>6 others</b> sent you <a href="#"
+                                            class="tm-notification-link">product updates</a>.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-01.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Lily A</b> and <b>6 others</b> sent you <a href="#"
+                                            class="tm-notification-link">product updates</a>.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-02.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Amara</b> and <b>6 others</b> sent you <a href="#"
+                                            class="tm-notification-link">product updates</a>.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                            <div class="media tm-notification-item">
+                                <div class="tm-gray-circle"><img src="img/notification-03.jpg" alt="Avatar Image" class="rounded-circle"></div>
+                                <div class="media-body">
+                                    <p class="mb-2"><b>Cinthela</b> and <b>6 others</b> sent you <a href="#"
+                                            class="tm-notification-link">product updates</a>.</p>
+                                    <span class="tm-small tm-text-color-secondary">6h ago.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 tm-block-col">
+    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+        <h2 class="tm-block-title">Orders List</h2>
+        <table class="table" id="ordersTable">
+            <thead>
+                <tr>
+                    <th scope="col">202302</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col">OPERATORS</th>
+                    <th scope="col">LOCATION</th>
+                    <th scope="col">DISTANCE</th>
+                    <th scope="col">START DATE</th>
+                    <th scope="col">EST DELIVERY DUE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <table id="data-table"></table> 
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
+            const table = document.getElementById('data-table');
+
+            // Fetch data from server
+            fetch('http://localhost:5000/')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok' + response.statusText);
+                    }
+                    return response.json(); // Parse JSON data
+                })
+                .then(data => {
+                    // Check if data is valid
+                    if (Array.isArray(data) && data.length > 0) {
+                        // Create table header
+                        const thead = document.createElement('thead');
+                        const headerRow = document.createElement('tr');
+                        Object.keys(data[0]).forEach(key => {
+                            const th = document.createElement('th');
+                            th.textContent = key;
+                            headerRow.appendChild(th);
+                        });
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+
+                        // Create table body
+                        const tbody = document.createElement('tbody');
+                        data.forEach(item => {
+                            const row = document.createElement('tr');
+                            Object.values(item).forEach(value => {
+                                const td = document.createElement('td');
+                                td.textContent = value;
+                                row.appendChild(td);
+                            });
+                            tbody.appendChild(row);
+                        });
+                        table.appendChild(tbody);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Fetch error: ', error);
+                });
+        });
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="tm-footer row tm-mt-small">
+            <div class="col-12 font-weight-light">
+                <p class="text-center text-white mb-0 px-4 small">
+                    Copyright &copy; <b>2018</b> All rights reserved. 
+                    
+                    Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!-- https://jquery.com/download/ -->
+    <script src="js/moment.min.js"></script>
+    <!-- https://momentjs.com/ -->
+    <script src="js/Chart.min.js"></script>
+    <!-- http://www.chartjs.org/docs/latest/ -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- https://getbootstrap.com/ -->
+    <script src="js/tooplate-scripts.js"></script>
+    <script>
+        Chart.defaults.global.defaultFontColor = 'white';
+        let ctxLine,
+            ctxBar,
+            ctxPie,
+            optionsLine,
+            optionsBar,
+            optionsPie,
+            configLine,
+            configBar,
+            configPie,
+            lineChart;
+            barChart, 
+            pieChart;
+        // DOM is ready
+        $(function () {
+            //drawLineChart(); // Line Chart
+            //drawBarChart(); // Bar Chart
+            //drawPieChart(); // Pie Chart
+
+            $(window).resize(function () {
+                //updateLineChart();
+                //updateBarChart();                
+            });
+        })
+    </script>
+
+</body>
+
+</html>
